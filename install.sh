@@ -72,7 +72,7 @@ gen-ssl-certs() {
   cd /etc/kvmd/nginx/ssl
   openssl ecparam -out server.key -name prime256v1 -genkey
   openssl req -new -x509 -sha256 -nodes -key server.key -out server.crt -days 3650 \
-        -subj "/C=US/ST=Denial/L=Denial/O=Pi-KVM/OU=Pi-KVM/CN=$(hostname)"
+        -subj "/C=RU/ST=Denial/L=Denial/O=Pi-KVM/OU=Pi-KVM/CN=$(hostname)"
   cp server* /etc/kvmd/vnc/ssl/
   cd ${APP_PATH}
 } # end gen-ssl-certs
