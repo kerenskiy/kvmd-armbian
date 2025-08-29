@@ -21,7 +21,7 @@
 VER=3.4
 set +x
 PIKVMREPO="https://files.pikvm.org/repos/arch/rpi4"
-KVMDFILE="kvmd-3.291-1-any.pkg.tar.xz"
+KVMDFILE="kvmd-4.94-1-any.pkg.tar.xz"
 KVMDCACHE="/var/cache/kvmd"; mkdir -p $KVMDCACHE
 PKGINFO="${KVMDCACHE}/packages.txt"
 APP_PATH=$(readlink -f $(dirname $0))
@@ -132,7 +132,7 @@ install-python-packages() {
   for i in $( echo "aiofiles aiohttp appdirs asn1crypto async-timeout bottle cffi chardet click
 colorama cryptography dateutil dbus dev hidapi idna libgpiod mako marshmallow more-itertools multidict netifaces
 packaging passlib pillow ply psutil pycparser pyelftools pyghmi pygments pyparsing requests semantic-version
-setproctitle setuptools six spidev systemd tabulate urllib3 wrapt xlib yaml yarl pyotp qrcode serial serial-asyncio" )
+setproctitle setuptools six spidev systemd tabulate urllib3 wrapt xlib yaml yarl pyotp qrcode serial serial-asyncio evdev build" )
   do
     echo "apt-get install python3-$i -y" | tee -a $LOGFILE
     apt-get install python3-$i -y >> $LOGFILE
@@ -411,8 +411,7 @@ install-kvmd-pkgs() {
 # uncompress platform package first
   i=$( ls ${KVMDCACHE}/${platform}*.tar.xz )  ### install the most up to date kvmd-platform package
 
-  # change the log entry to show 3.291 platform installed as we'll be forcing kvmd-3.291 instead of latest/greatest kvmd
-  _platformver=$( echo $i | sed -e 's/3\.29[2-9]*/3.291/g' -e 's/3\.3[0-9]*/3.291/g' -e 's/3.2911/3.291/g' -e 's/4\.[0-9].*-/3.291-/g' )
+  _platformver=$( echo $i )
   echo "-> Extracting package $_platformver into /" | tee -a $INSTLOG
   tar xfJ $i
 
@@ -421,8 +420,8 @@ install-kvmd-pkgs() {
   do
     case $i in
       *kvmd-3.29[2-9]*|*kvmd-3.[3-9]*|*kvmd-[45].[1-9]*)  # if latest/greatest is 3.292 and higher, then force 3.291 install
-        echo "*** Force install kvmd 3.291 ***" | tee -a $LOGFILE
-        # copy kvmd-3.291 package
+        echo "*** Force install kvmd 4.94 ***" | tee -a $LOGFILE
+        # copy kvmd-4.94 package
         cp $CWD/$KVMDFILE $KVMDCACHE/
         i=$KVMDCACHE/$KVMDFILE
         ;;
@@ -493,7 +492,7 @@ build-ustreamer() {
   cd /tmp
   git clone --depth=1 https://github.com/pikvm/ustreamer
   cd ustreamer/
-  make WITH_GPIO=1 WITH_SYSTEMD=1 WITH_JANUS=1 WITH_V4P=1 -j
+  make WITH_PYTHON=1 WITH_GPIO=1 WITH_SYSTEMD=1 WITH_JANUS=1 WITH_V4P=1 -j
   make install
   # kvmd service is looking for /usr/bin/ustreamer
   ln -sf /usr/local/bin/ustreamer* /usr/bin/
@@ -515,7 +514,7 @@ install-dependencies() {
   install-python-packages
 
   echo "-> Install python3 modules dbus_next and zstandard" | tee -a $LOGFILE
-  if [[ "$PYTHONVER" == "3.11" || "$PYTHONVER" == "3.12" ]]; then
+  if [[ "$PYTHONVER" == "3.11" || "$PYTHONVER" == "3.12" || "$PYTHONVER" == "3.13" ]]; then
     apt install -y python3-dbus-next python3-zstandard
   else
     pip3 install dbus_next zstandard
@@ -949,10 +948,8 @@ update-logo() {
   cp opikvm-logo.svg logo.svg
 
   # change some text in the main html page
-  sed -i.bak -e 's/The Open Source KVM over IP/KVM over IP on non-Arch linux OS by @srepac/g' /usr/share/kvmd/web/index.html
-  sed -i.bak -e 's/The Open Source KVM over IP/KVM over IP on non-Arch linux OS by @srepac/g' /usr/share/kvmd/web/kvm/index.html
-  sed -i.backup -e 's|https://pikvm.org/support|https://discord.gg/YaJ87sVznc|g' /usr/share/kvmd/web/kvm/index.html
-  sed -i.backup -e 's|https://pikvm.org/support|https://discord.gg/YaJ87sVznc|g' /usr/share/kvmd/web/index.html
+  sed -i.bak -e 's/The Open Source KVM over IP/KVM over IP on non-Arch linux OS by KYKYPY3O/g' /usr/share/kvmd/web/index.html
+  sed -i.bak -e 's/The Open Source KVM over IP/KVM over IP on non-Arch linux OS by KYKYPY3O/g' /usr/share/kvmd/web/kvm/index.html
   cd
 }
 
@@ -1002,7 +999,7 @@ SERVICES="kvmd-nginx kvmd-webterm kvmd-otg kvmd kvmd-fix"
 # added option to re-install by adding -f parameter (for use as platform switcher)
 PYTHON_VERSION=$( python3 -V | awk '{print $2}' | cut -d'.' -f1,2 )
 if [[ $( grep kvmd /etc/passwd | wc -l ) -eq 0 || "$1" == "-f" ]]; then
-  printf "\nRunning part 1 of PiKVM installer script v$VER by @srepac\n" | tee -a $LOGFILE
+  printf "\nRunning part 1 of PiKVM installer script v$VER by KYKYPY3O\n" | tee -a $LOGFILE
   get-platform
   get-packages
   install-kvmd-pkgs
@@ -1017,7 +1014,7 @@ if [[ $( grep kvmd /etc/passwd | wc -l ) -eq 0 || "$1" == "-f" ]]; then
   armbian-packages
   systemctl disable --now janus ttyd
 
-  printf "\nEnd part 1 of PiKVM installer script v$VER by @srepac\n" >> $LOGFILE
+  printf "\nEnd part 1 of PiKVM installer script v$VER by KYKYPY3O\n" >> $LOGFILE
   printf "\nReboot is required to create kvmd users and groups.\nPlease re-run this script after reboot to complete the install.\n" | tee -a $LOGFILE
 
   # Fix paste-as-keys if running python 3.7
@@ -1034,7 +1031,7 @@ if [[ $( grep kvmd /etc/passwd | wc -l ) -eq 0 || "$1" == "-f" ]]; then
   press-enter
   reboot
 else
-  printf "\nRunning part 2 of PiKVM installer script v$VER by @srepac\n" | tee -a $LOGFILE
+  printf "\nRunning part 2 of PiKVM installer script v$VER by KYKYPY3O\n" | tee -a $LOGFILE
 
   echo "-> Re-installing janus ..." | tee -a $LOGFILE
   apt reinstall -y janus > /dev/null 2>&1

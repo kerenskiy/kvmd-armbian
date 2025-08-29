@@ -9,7 +9,7 @@ KVMD Install for armbian/raspbian
 
 It supports Allwinner, Amlogic and Rockchip based tv box, tested on phicomm n1, mxq pro 4k, tqc a01. 
 Chipset needs to support USB OTG feature, lots of old amglogic chipset does not support otg feature, such as s805 and s905.
-You should install armbian with debian jammy as jammy has python 3.10 or python 3.11 (starting with kvmd 3.217) which the newer kvmd code is based on.
+You should install armbian with Ubuntu plucky as plucky has python 3.13 (need for kvmd 4.94) which the newer kvmd code is based on.
 Then run this script (2x) to install pikvm.
 
 This also works on rpi boards running Raspbian Bookworm.
@@ -32,8 +32,8 @@ Original Script [http://148.135.104.55/RPiKVM/install-pikvm-raspbian.sh]
     - Recommended to cut off usb cable's power line, otherwise it might cause otg disconnect.
 
 ## Step 1
-- Flash armbian debian [Recommended jammy] for your tv box (If kernel not support otg you should build a kernel enable otg features)
-- Flash armbian debian jammy for all others
+- Flash armbian debian [Recommended plucky] for your tv box (If kernel not support otg you should build a kernel enable otg features)
+- Flash armbian debian plucky for all others
 
 ## Step 2 (skip this step if running on Orange Pi zero and one boards)
 - Modify your dtb file to enable otg feature. Change dr_mode from host to peripheral for otg usb port.
