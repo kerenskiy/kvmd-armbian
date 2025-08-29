@@ -495,7 +495,9 @@ build-ustreamer() {
   make WITH_PYTHON=1 WITH_GPIO=1 WITH_SYSTEMD=1 WITH_JANUS=1 WITH_V4P=1 -j
   make install
   # kvmd service is looking for /usr/bin/ustreamer
+  echo "-> Install python package ustreamer"
   python3.13 -m pip install --break-system-packages python/dist/*.whl
+  echo "-> Install python package ustreamer. Done"
   ln -sf /usr/local/bin/ustreamer* /usr/bin/
 
   # add janus support
