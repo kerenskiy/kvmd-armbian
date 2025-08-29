@@ -18,7 +18,7 @@
 # NOTE:  This was tested on a new install of raspbian desktop and lite versions, but should also work on an existing install.
 #
 # Last change 20240526 2345 PDT
-VER=3.4
+VER=4.0
 set +x
 PIKVMREPO="https://files.pikvm.org/repos/arch/rpi4"
 KVMDFILE="kvmd-4.94-1-any.pkg.tar.xz"
@@ -495,6 +495,7 @@ build-ustreamer() {
   make WITH_PYTHON=1 WITH_GPIO=1 WITH_SYSTEMD=1 WITH_JANUS=1 WITH_V4P=1 -j
   make install
   # kvmd service is looking for /usr/bin/ustreamer
+  python3.13 -m pip install --break-system-packages python/dist/*.whl
   ln -sf /usr/local/bin/ustreamer* /usr/bin/
 
   # add janus support
