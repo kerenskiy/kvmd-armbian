@@ -812,7 +812,7 @@ armbian-packages() {
 fix-nfs-msd() {
   NAME="aiofiles.tar"
 
-  for i in 3.11 3.12; do
+  for i in 3.11 3.12 3.13; do
     LOCATION="/usr/lib/python$i/site-packages"
     if [ -e $LOCATION ]; then
       echo "-> Extracting $NAME into $LOCATION" | tee -a $LOGFILE
