@@ -997,7 +997,7 @@ chmod +x /usr/local/bin/pi* /usr/local/bin/update-rpikvm.sh /usr/local/bin/tshoo
 ### fix for kvmd 3.230 and higher
 ln -sf python3 /usr/bin/python
 
-SERVICES="kvmd-nginx kvmd-webterm kvmd-otg kvmd kvmd-fix"
+SERVICES="kvmd-nginx kvmd-webterm kvmd-otg kvmd kvmd-fix kvmd-oled kvmd-oled-reboot kvmd-oled-shutdown"
 
 # added option to re-install by adding -f parameter (for use as platform switcher)
 PYTHON_VERSION=$( python3 -V | awk '{print $2}' | cut -d'.' -f1,2 )
